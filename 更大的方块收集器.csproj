@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<AssemblyName>更大的方块收集器</AssemblyName>
+		<RootNamespace>更大的方块收集器</RootNamespace>
+
+		<!-- 你的游戏安装路径 -->
+		<DuckovPath>D:\Program Files (x86)\Steam\steamapps\common\Escape from Duckov</DuckovPath>
+		<ModName>更大的方块收集器</ModName>
+		<ModOut>$(DuckovPath)\Duckov_Data\Mods\$(ModName)\</ModOut>
+	</PropertyGroup>
+
+	<!-- 官方建议：把 Duckov_Data\Managed 下的 dll 加入引用 -->
+	<ItemGroup>
+		<Reference Include="$(DuckovPath)\Duckov_Data\Managed\TeamSoda.*" />
+		<Reference Include="$(DuckovPath)\Duckov_Data\Managed\ItemStatsSystem.dll" />
+		<Reference Include="$(DuckovPath)\Duckov_Data\Managed\Unity*" />
+	</ItemGroup>
+
+	<!-- 构建后自动复制 dll 并生成 info.ini（避免手写出错） -->
+	<Target Name="StageMod" AfterTargets="Build">
+		<MakeDir Directories="$(ModOut)" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModOut)" />
+		<WriteLinesToFile File="$(ModOut)info.ini" Overwrite="true"  Lines="name=$(ModName)" />
+		<WriteLinesToFile File="$(ModOut)info.ini" Overwrite="false" Lines="displayName=$(ModName)" />
+		<WriteLinesToFile File="$(ModOut)info.ini" Overwrite="false"
+		  Lines="description=现在方块收集器拥有跟行军背包Max一样的容量和负重。The Square Collector now matches the capacity and carry weight of the Marching Backpack Max." />
+	</Target>
+</Project>
